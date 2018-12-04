@@ -42,7 +42,7 @@ public class GoogleSearch{
 	    URL url=new URL(toSearch + URLEncoder.encode(searchTerm,"UTF-8"));
 	    
 	    HttpsURLConnection connection=(HttpsURLConnection)url.openConnection();
-	    connection.setRequestProperty("User-Agent","UCSB/1.0");
+	    //  connection.setRequestProperty("User-Agent","UCSB/1.0");
 	    BufferedReader input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 	    String line;
 	    StringBuffer buffer=new StringBuffer();
@@ -50,9 +50,10 @@ public class GoogleSearch{
 		buffer.append(line);
 	    }
 	    input.close();
-    
+            connection.disconnect();
 	    JsonParser parser = new JsonParser();
 	    JsonObject json = parser.parse(buffer.toString()).getAsJsonObject();
+	    
 	    json = parser.parse(json.get("items").toString()).getAsJsonObject();
 	    JsonArray array = json.getAsJsonArray("value");
 	    for(int i = 0; i < array.size(); ++i) {

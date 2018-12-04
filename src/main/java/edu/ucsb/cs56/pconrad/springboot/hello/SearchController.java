@@ -38,8 +38,9 @@ public class SearchController{
 		// API's should return an ArrayList<SearchResult> Object.
 
 		if(query.getEngine().equals("Google")){
-			SearchResult resultsObject = new SearchResult("title", "subtitle","URL");
-			results.add(resultsObject);
+		    ArrayList<SearchResult> gResults=GoogleSearch.gSearch(query);
+		    results.addAll(gResults);
+		    
 		}
 		else if(query.getEngine().equals("DuckDuckGo")){
 			//results = "Searched " + query.getUserEntry() + " with DuckDuckGo";
@@ -103,6 +104,8 @@ public class SearchController{
 			stringResults.add(results.get(i).toSplittableString());
 		}
 
+	        
 		return ResponseEntity.ok(stringResults);
 	}
+   
 }

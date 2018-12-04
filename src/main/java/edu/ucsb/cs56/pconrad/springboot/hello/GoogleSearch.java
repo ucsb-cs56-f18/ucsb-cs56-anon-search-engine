@@ -15,29 +15,32 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class GoogleSearch{
     
-    static String apiKey = "AIzaSyBpVaXBM09Ui7J_ULzayl8F4sv5HnGYRKI";
-    static String customSearchEngineKey = "27016364061886516:j7jvcqdxoxc";
+    static String apiKey = "";
+    static String customSearchEngineKey = "";
     static String searchURL = "https://www.googleapis.com/customsearch/v1?";
 
 
     public static ArrayList<SearchResult> gSearch(SearchQuery query) {
   
 	String file="GoogleApiKey.txt";
-	/*try{
+	try{
 	    BufferedReader reader = new BufferedReader(new FileReader(file));
 	    apiKey=reader.readLine();
+	    //got custom search engine key from https://developers.google.com/custom-search/v1/using_rest
 	    customSearchEngineKey=reader.readLine();
 	    reader.close();
 	}
 	catch (java.io.IOException e){
 	    System.err.print("File is empty");
 	}
-	*/
+	
 	String toSearch = searchURL + "key=" + apiKey + "&cx=" + customSearchEngineKey+"&q=";
-
+        
 	String searchTerm=query.getUserEntry();
+	ArrayList<SearchResult> results = new ArrayList<SearchResult>();
 	try {
 	    URL url=new URL(toSearch + URLEncoder.encode(searchTerm,"UTF-8"));
+	    
 	    HttpsURLConnection connection=(HttpsURLConnection)url.openConnection();
 	    connection.setRequestProperty("User-Agent","UCSB/1.0");
 	    BufferedReader input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -47,11 +50,10 @@ public class GoogleSearch{
 		buffer.append(line);
 	    }
 	    input.close();
-	    System.out.println(buffer.toString());
-	    ArrayList<SearchResult> results = new ArrayList<SearchResult>();
+    
 	    JsonParser parser = new JsonParser();
-	    JsonObject json = parser.parse(input).getAsJsonObject();
-	    json = parser.parse(json.get("webPages").toString()).getAsJsonObject();
+	    JsonObject json = parser.parse(buffer.toString()).getAsJsonObject();
+	    json = parser.parse(json.get("items").toString()).getAsJsonObject();
 	    JsonArray array = json.getAsJsonArray("value");
 	    for(int i = 0; i < array.size(); ++i) {
 		JsonObject jname = parser.parse(array.get(i).toString()).getAsJsonObject();

@@ -54,8 +54,8 @@ public class GoogleSearch{
 	    JsonParser parser = new JsonParser();
 	    JsonObject json = parser.parse(buffer.toString()).getAsJsonObject();
 	    
-	    json = parser.parse(json.get("items").toString()).getAsJsonObject();
-	    JsonArray array = json.getAsJsonArray("value");
+	    // json = parser.parse(json.get("items").toString()).getAsJsonObject();
+	    JsonArray array = json.getAsJsonArray("items");
 	    for(int i = 0; i < array.size(); ++i) {
 		JsonObject jname = parser.parse(array.get(i).toString()).getAsJsonObject();
 		String name = jname.get("title").toString();
@@ -64,6 +64,8 @@ public class GoogleSearch{
 		JsonObject jurl_ = parser.parse(array.get(i).toString()).getAsJsonObject();
 		String url_ = jname.get("link").toString();
 		results.add(new SearchResult(name, snippet, url_));
+	    
+	    
 	    }
 	    return results;
 	    
